@@ -1,0 +1,108 @@
+AI PROMPT LOG — Notes Board Project
+File: ai_prompt_log.txt
+Date: 2026-10-24
+
+PURPOSE
+This log records five important prompts used during the Notes Board project, the
+main response or outcome, and why each prompt was used. Responses are summarized
+rather than reproduced as full transcripts. Prompts are kept in their original
+wording where available.
+
+============================================================
+ENTRY 1 — Frontend landing page
+
+Prompt:
+“I need hero page to only showcase the website with a scroll animation with all
+the features. I want the scroll animation to zoom into a notebook with bold
+text. Don’t use AI-slop colours. Generate me code.”
+
+Response / outcome:
+Generated Vue frontend code for a product showcase with a notebook-focused
+visual, scroll-driven zoom, feature sections, responsive styling, and
+reduced-motion support.
+
+Why used:
+To create a distinctive landing page that presents the Notes Board product
+and its features through a scrolling visual story.
+
+============================================================
+ENTRY 2 — Plan the backend
+
+Prompt:
+“Ok done with the front end now backend.”
+
+Response / outcome:
+The next development phase was planned around a backend with persistent note
+storage, authentication, and create/read/update/delete (CRUD) functionality.
+
+Why used:
+To move from the frontend showcase toward a functional MVP.
+
+============================================================
+ENTRY 3 — Choose and build the backend
+
+Prompt:
+“Build the Notes Board backend step by step for my existing Vue + Vite
+frontend. Scope: full backend with CRUD notes. Database: Supabase PostgreSQL.
+User authentication: include signup and login. I am a beginner using VS Code
+on Windows. Give exact terminal commands and complete file contents, one step
+at a time, preserving my existing frontend.”
+
+Response / outcome:
+The proposed approach used Supabase Auth and PostgreSQL with the existing Vue
+frontend, including database setup, Row Level Security (RLS), the Supabase
+client, and environment variables.
+
+Why used:
+To define a practical MVP backend while keeping the setup manageable for a
+beginner and preserving the existing frontend.
+
+============================================================
+ENTRY 4 — Identify setup requirements and troubleshoot
+
+Prompt:
+“I havent installed anything what anol i need”
+
+Related follow-up prompts:
+“what should i do now first step”
+“next”
+“for 4th command it is showing error”
+
+Response / outcome:
+The setup guidance focused on installing Node.js LTS, restarting VS Code,
+checking `node -v` and `npm -v`, and identifying the exact terminal error
+before attempting a fix. The reported error still needs to be verified.
+
+Why used:
+To establish the local development environment and resolve setup problems
+before continuing with implementation.
+
+============================================================
+ENTRY 5 — Create a submission-ready prompt log
+
+Prompt:
+“make me a Keep a prompt log (ai_prompt_log.txt) with your prompts, the
+responses and why you used them as a text document to push it”
+
+Response / outcome:
+A text log was prepared to document the key prompts, summarized outcomes,
+and reasons for using AI assistance.
+
+Why used:
+To make the development process transparent and provide documentation that
+can be committed to the GitHub repository for review by judges.
+
+============================================================
+PROJECT STATUS NOTE
+The Vue frontend code has been generated. Supabase PostgreSQL and Supabase Auth
+were selected as the intended backend approach. The Node.js/npm setup error
+and completion of database setup, signup/login, frontend integration, and CRUD
+testing should be verified before claiming those features are working.
+
+SECURITY NOTE
+Do not commit real secrets. Keep `.env.local` out of version control. Never
+publish database passwords, Supabase service-role keys, or secret API keys.
+
+LOG SCOPE
+This is a concise, partial log of five important prompts and their outcomes,
+not a complete transcript of every prompt used during development.
