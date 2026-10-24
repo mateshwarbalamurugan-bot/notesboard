@@ -6,10 +6,39 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api
 const page = ref('home')
 function go(p) { page.value = p; menuOpen.value = false }
 
-// AI Studio calls the backend; the Gemini API key never enters browser code.
-const aiPrompt = ref('')
+// Presentation demo mode: uses prepared sample responses and needs no API key or internet.
+// This is intentionally a fixed example generator, not a live AI connection.
+const demoPrompt = 'Create a beginner-friendly project plan for an AI system that detects plastic bottles on beaches.'
+const aiPrompt = ref(demoPrompt)
 const aiMode = ref('project-plan')
-const aiResult = ref('')
+const aiResult = ref(`PROJECT: Clean Kadal — AI Plastic Bottle Detection
+
+1. PROBLEM
+Plastic bottles on beaches are difficult to count manually, making cleanup teams slower and progress hard to measure.
+
+2. PROPOSED MVP
+Build a camera-based demo that detects bottle-like objects in an image, draws bounding boxes, and records the number of detections. Treat results as a prototype and verify plastic vs. glass separately.
+
+3. BASIC TECH STACK
+• Frontend: Vue 3 for the dashboard
+• Backend: Node.js + Express API
+• AI: a pretrained object-detection model, evaluated on beach images
+• Storage: JSON for a quick demo; a database can be added later
+
+4. FOUR-WEEK PLAN
+Week 1 — Collect sample images and define what counts as a bottle.
+Week 2 — Run a pretrained detector and review false positives.
+Week 3 — Connect detections to the dashboard and save counts.
+Week 4 — Test in varied lighting, document limitations, and prepare the demo.
+
+5. SUCCESS METRICS
+Measure precision on a small, manually labelled test set, missed bottles, false detections, and processing time.
+
+6. RISKS
+Reflections, distance, occlusion, and glass bottles may confuse the detector. Clearly label this as an MVP and validate before using it for real cleanup decisions.
+
+NEXT ACTION
+Start with 50–100 labelled images and create a simple test table before training or fine-tuning any model.`)
 const aiLoading = ref(false)
 const aiError = ref('')
 const aiSaved = ref(false)
@@ -20,26 +49,91 @@ const aiModes = [
   { value: 'study-roadmap', label: 'Learning roadmap' },
 ]
 const aiModeLabel = computed(() => aiModes.find((m) => m.value === aiMode.value)?.label || 'AI result')
+const demoResponses = {
+  'project-plan': `SAMPLE PROJECT PLAN — Clean Kadal
+
+GOAL
+Make a prototype that spots plastic-bottle-like objects in beach photos and helps a cleanup team track detections.
+
+MVP FEATURES
+1. Upload or capture an image.
+2. Run a pretrained object detector.
+3. Show bounding boxes and a bottle count.
+4. Save results and compare test runs.
+
+BUILD PLAN
+Week 1: Gather and label sample photos.
+Week 2: Test an existing model and record false positives.
+Week 3: Connect the model output to the Vue dashboard.
+Week 4: Test on new images and prepare a demo.
+
+TECH STACK
+Vue 3, Node.js/Express, a pretrained computer-vision model, and JSON or SQLite storage.
+
+RISKS & TESTING
+Reflections, small objects and glass bottles can cause errors. Evaluate on labelled images and report accuracy honestly.
+
+NEXT STEP
+Create a small labelled test set and decide how you will measure precision and missed detections.`,
+  brainstorm: `SAMPLE BRAINSTORM — 5 practical directions
+
+1. Beach Bottle Counter — detect bottle-like objects in photos and save counts.
+2. Cleanup Heatmap — mark beach areas where detections are frequently found.
+3. Before/After Tracker — compare photos taken before and after a cleanup.
+4. Volunteer Task Board — let teams claim areas and record collected waste.
+5. Low-Light Test Mode — evaluate how well detection works at different times of day.
+
+RECOMMENDED FIRST BUILD
+Start with the Beach Bottle Counter. It is the easiest to demonstrate and gives you testable metrics. Add the other features only after detection results are reliable.`,
+  explain: `SIMPLE EXPLANATION — How an AI bottle detector works
+
+Think of the model as a student who has practised looking at many labelled pictures. When you show it a new beach photo, it predicts where objects might be and gives each prediction a label and confidence score.
+
+THE BASIC FLOW
+1. The camera captures an image.
+2. The model analyses the image.
+3. It returns possible object labels and locations.
+4. The website draws boxes and counts predictions.
+5. A human checks mistakes and records the result.
+
+IMPORTANT LIMITATION
+A generic model may recognise a bottle without knowing whether it is plastic or glass. That distinction needs suitable training data or another verification step.`,
+  'study-roadmap': `SAMPLE 4-WEEK LEARNING ROADMAP
+
+WEEK 1 — Web basics
+Learn Vue components, reactive data, forms and how a frontend sends an HTTP request.
+
+WEEK 2 — Backend basics
+Build an Express route, validate input, return JSON, and learn how the frontend handles errors.
+
+WEEK 3 — AI integration
+Try a pretrained image model on a small labelled dataset. Record true positives, false positives and missed detections.
+
+WEEK 4 — Integration & demo
+Connect the model output to the dashboard, save results, test edge cases and prepare a short demo.
+
+DAILY ROUTINE
+Spend 30 minutes learning, 45 minutes building, and 15 minutes writing down what worked and what failed.
+
+DELIVERABLE
+At the end, aim to show one complete flow: image → detections → dashboard → saved result.`,
+}
 async function generateWithAI() {
   const prompt = aiPrompt.value.trim()
-  if (prompt.length < 10) { aiError.value = 'Enter at least 10 characters so the AI has enough context.'; return }
+  if (prompt.length < 10) { aiError.value = 'Enter at least 10 characters to generate the prepared example.'; return }
   aiLoading.value = true
   aiError.value = ''
-  aiResult.value = ''
   aiSaved.value = false
-  try {
-    const response = await fetch(`${API_BASE}/idea-coach`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idea: prompt, mode: aiMode.value }),
-    })
-    const data = await response.json().catch(() => ({}))
-    if (!response.ok) throw new Error(data.error || `AI request failed (${response.status}).`)
-    if (!data.plan) throw new Error('The AI returned an empty response. Please try again.')
-    aiResult.value = data.plan
-  } catch (error) {
-    aiError.value = error.message || 'Could not connect to the AI service. Check your backend and API-key setup.'
-  } finally { aiLoading.value = false }
+  // Brief delay for the demo animation; no remote request is made.
+  await new Promise((resolve) => setTimeout(resolve, 450))
+  const sample = demoResponses[aiMode.value] || demoResponses['project-plan']
+  aiResult.value = `${sample}
+
+DEMO PROMPT
+${prompt}
+
+NOTE: This is a prepared example response for demonstration. It was not generated by a live AI model.`
+  aiLoading.value = false
 }
 function useAIExample() {
   aiPrompt.value = 'Create a beginner-friendly 4-week roadmap to build a Vue app with a Node.js backend.'
@@ -101,8 +195,8 @@ const faqs = [
   { q: 'Where are my notes stored?', a: 'When the backend is running, notes are stored with the local backend and are also backed up in your browser. Keep the backend data folder when moving your project to another computer.' },
   { q: 'How does the mind map get built?', a: 'Open a note and press Mind map. Notesboard finds the words you use most and links each one to the words that appear beside it. It runs on your device, so your text never leaves the browser.' },
   { q: 'Can I edit a note the AI wrote?', a: 'Yes. Generated notes are ordinary notes. Change the wording, move the checklist items or delete the whole thing. Your edits always win over a regenerate.' },
-  { q: 'How do I set up AI Studio?', a: 'Create a backend/.env file, add your Gemini API key as GEMINI_API_KEY, and restart the backend. Keep the key out of frontend files and never share it in screenshots or source control.' },
-  { q: 'Does it work offline?', a: 'Writing, editing, the basic note helper and mind maps work offline. AI Studio uses the Gemini API and requires an internet connection and a valid API key. Voice recording uses the speech service built into your browser, which usually needs a connection.' },
+  { q: 'How do I set up AI Studio?', a: 'This version uses prepared sample answers for presentation mode and does not require an API key. Live AI integration can be restored later by connecting a valid provider key through the backend.' },
+  { q: 'Does it work offline?', a: 'Writing, editing, mind maps and the prepared AI Studio demo responses work without an AI API key. Voice recording uses the speech service built into your browser, which usually needs a connection.' },
 ]
 
 /* ---------- notebook scroll (home page) ---------- */
@@ -807,7 +901,7 @@ onBeforeUnmount(() => {
           <section class="ai-hero">
             <p class="section-label"><span class="live-dot"></span> AI STUDIO</p>
             <h1>Make your next idea<br /><span>more possible.</span></h1>
-            <p class="ai-lead">Generate project plans, brainstorm new directions, learn a skill or ask the AI to explain a topic. Results can be saved directly to your Notesboard.</p>
+            <p class="ai-lead">Explore prepared example outputs for project plans, brainstorming, simple explanations and learning roadmaps. This presentation mode works without an API key; responses are samples, not live AI.</p>
           </section>
 
           <section class="ai-layout">
@@ -823,7 +917,7 @@ onBeforeUnmount(() => {
               <button class="primary-button ai-generate-button" @click="generateWithAI" :disabled="aiLoading || aiPrompt.trim().length < 10">
                 <span v-if="aiLoading" class="ai-loading-dot"></span>{{ aiLoading ? 'Generating…' : 'Generate with AI ↗' }}
               </button>
-              <p class="ai-security-note"><span>♢</span> Your API key stays on your backend and is never sent to this page.</p>
+              <p class="ai-security-note"><span>♢</span> DEMO MODE: prepared sample answers — no API key or internet required.</p>
               <p v-if="aiError" class="ws-alert ai-error" role="alert">{{ aiError }}</p>
             </div>
 
@@ -837,7 +931,7 @@ onBeforeUnmount(() => {
           </section>
 
           <section v-if="aiResult" class="ai-result panel" aria-live="polite">
-            <div class="ai-result-heading"><div><p class="section-label">YOUR GENERATED RESULT</p><h2>{{ aiModeLabel }}<span class="result-period">.</span></h2></div><span class="ai-result-badge">READY</span></div>
+            <div class="ai-result-heading"><div><p class="section-label">PREPARED DEMO RESPONSE · NOT LIVE AI</p><h2>{{ aiModeLabel }}<span class="result-period">.</span></h2></div><span class="ai-result-badge">READY</span></div>
             <div class="ai-result-text">{{ aiResult }}</div>
             <div class="ai-result-actions"><button class="primary-button" @click="saveAIResult">Save as note ↗</button><button class="ghost-button" @click="copyAIResult">Copy result</button><button class="tool" @click="generateWithAI" :disabled="aiLoading">Regenerate</button></div>
             <p v-if="aiSaved" class="ai-saved-note">Saved successfully.</p>
