@@ -1,0 +1,25 @@
+node_modules
+dist
+
+# Dependencies and build output
+node_modules/
+dist/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Private saved notes
+backend/data/notes.json
+
+# Local backups and update archives
+.notesboard-backup-*/
+notesboard-ai-tags-3d-patch.zip
+notesboard-ai-tags-3d-patch/
+notesboard-fix-now.zip
+notesboard-fix-now/
+
+# Private notes database
+backend/data/notes.json
+
