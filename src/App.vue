@@ -1153,7 +1153,7 @@ h1, h2, h3, h4 { font-family: var(--display); font-weight: 700; margin: 0; }
 .wave { height: 110px; display: flex; align-items: center; justify-content: space-between; margin: 22px 0; }
 .wave i { width: 5px; height: 100%; border-radius: 3px; background: var(--accent); transform: scaleY(.08); opacity: .35; transform-origin: center; }
 .is-in .wave i { animation: voice 1.3s ease-in-out infinite; animation-delay: calc(var(--i) * -.11s); }
-@keyframes voice { 0%, 100% { transform: scaleY(.12); opacity: .4; } 50% { transform: scaleY(calc(.3 + (var(--i) % 5) * .17)); opacity: 1; } }
+@keyframes voice { 0%, 100% { transform: scaleY(.12); opacity: .4; } 50% { transform: scaleY(.7); opacity: 1; } }
 .transcript { margin: 0; font-size: 16px; line-height: 1.6; min-height: 52px; }
 .t-line { display: block; width: max-content; max-width: 100%; white-space: nowrap; overflow: hidden; clip-path: inset(0 100% 0 0); }
 .is-in .t1 { animation: type 1.9s steps(36, end) .7s forwards; }
